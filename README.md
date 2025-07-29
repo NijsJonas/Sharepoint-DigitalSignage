@@ -1,6 +1,6 @@
-# Sharepoint-DigitanSignage
+# Sharepoint-DigitalSignage
 
-Sharepoint-DigitanSignage is a Node.js server application designed to display fullscreen images and videos from sharepoint folders, with support for real-time updates. Ideal for digital signage solutions, this project allows instant reflection of changes in the folders on display screens.
+Sharepoint-DigitalSignage is a Node.js server application designed to display fullscreen images and videos from sharepoint folders, with support for real-time updates. Ideal for digital signage solutions, this project allows instant reflection of changes in the folders on display screens.
 
 This project was originally developed for a job on the Hive 2025, and then adapted for sharepoint usage on the signage screens of Verto Puurs. For more information contact jonas.nijs@verto.be
 
