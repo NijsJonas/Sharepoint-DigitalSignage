@@ -8,7 +8,7 @@ const videoExtensions = ['.mp4', '.webm', '.mov', '.avi', '.mkv'];
 
 const getMediaFromFolder = (folderPath) => {
     try {
-        if (!fs.existsSync(folderPath)) {
+        if (!fs.existsSync(process.env.FOLDER_LOCATION+folderPath)) {
             return [];
         }
 
