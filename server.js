@@ -35,7 +35,7 @@ function setupFolderWatcher(folderPath) {
     folderImages.set(folderPath, media);
 
     // Create watcher
-    const watcher = chokidar.watch(folderPath, {
+    const watcher = chokidar.watch(process.env.FOLDER_LOCATION+folderPath, {
         ignored: /^\./,
         persistent: true,
         ignoreInitial: true
