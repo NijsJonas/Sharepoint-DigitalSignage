@@ -4,6 +4,8 @@ const socketIo = require('socket.io');
 const fs = require('fs');
 const path = require('path');
 const chokidar = require('chokidar');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
@@ -18,8 +20,8 @@ const folderImages = new Map();
 const getMediaFromFolder = require("./Functions/getMediaFromFolder")
 
 // Serve static files (images)
-app.use('/images', express.static('.'));
-
+app.use('/images', express.static(process.env.FOLDER_LOCATION));
+console.log(`Serving images from ${process.env.FOLDER_LOCATION}`);
 // Function to setup folder watcher
 function setupFolderWatcher(folderPath) {
     if (folderWatchers.has(folderPath)) {

@@ -1,5 +1,7 @@
 const fs = require("fs");
 const path = require("path");
+const dotenv = require('dotenv');
+dotenv.config();
 
 const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
 const videoExtensions = ['.mp4', '.webm', '.mov', '.avi', '.mkv'];
@@ -10,7 +12,7 @@ const getMediaFromFolder = (folderPath) => {
             return [];
         }
 
-        const files = fs.readdirSync(folderPath);
+        const files = fs.readdirSync(process.env.FOLDER_LOCATION+folderPath);
         return files
             .filter(file => {
                 const ext = path.extname(file).toLowerCase();
