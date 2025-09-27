@@ -8,6 +8,7 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "auto-git-update": "^2.1.2",
     "chokidar": "^3.5.3",
     "dotenv": "^17.2.2",
     "express": "^4.18.2",
