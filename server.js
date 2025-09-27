@@ -129,7 +129,23 @@ process.on('SIGINT', () => {
     });
     process.exit(0);
 });
-updater.autoUpdate();
+
+async function upgradeOnly() {
+    try {
+        const isRemoteNewer = await updater.compareVersions(); // true only if remote > local
+        if (isRemoteNewer) {
+            console.log('Updater: remote is newer; upgrading...');
+            await updater.autoUpdate();
+        } else {
+            console.log('Updater: no upgrade (remote is same or older).');
+        }
+    } catch (err) {
+        console.error('Updater error:', err);
+    }
+}
+
+upgradeOnly();
+
 server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
     console.log('Usage: http://localhost:${PORT}?folder=your-folder-name');
