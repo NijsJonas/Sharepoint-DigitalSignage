@@ -61,7 +61,13 @@ function updateFolderImages(folderPath) {
     io.emit('mediaUpdated', { folder: folderPath, media });
 }
 
-// Main route
+// Main routes
+app.use(express.static(path.join(__dirname, 'Public')));
+
+app.get('/TimeTable', (req, res) => {
+    res.sendFile('TimeTable.html', { root: path.join(__dirname, 'Public') });
+});
+
 app.get('/', (req, res) => {
     const folder = req.query.folder;
     if (!folder) return res.status(400).send('Missing folder parameter');

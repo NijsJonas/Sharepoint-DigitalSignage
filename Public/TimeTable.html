@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GCKB Booking (Beta V0.1)</title>
+    <style>
+        body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <iframe
+            src="https://gymcenterkleinbrabantcvba.sporthal.net/bookingsexport/narrowcasting?location=365d5097-0a0b-5eab-ac4b-a161f7038b10&level=ADMIN"
+            style="width: 100vw; height: 100vh; border: none; overflow: hidden; left: 0; top: 0;"
+            name="frameNameHere"
+    ></iframe>
+</body>
+</html>
+<script>
+    window.setInterval("reloadIFrame();", 60000);
+    const iframe = document.querySelector("iframe[name='frameNameHere']");
+    function reloadIFrame() {
+        if (!iframe) return;
+        try {
+            const url = new URL(iframe.src);
+            url.searchParams.set('_ts', Date.now().toString());
+            iframe.src = url.toString();
+        } catch (e) {
+            iframe.src = iframe.src;
+        }
+    }
+</script>
