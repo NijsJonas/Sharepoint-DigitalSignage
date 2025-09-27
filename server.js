@@ -22,7 +22,8 @@ const getMediaFromFolder = require("./Functions/getMediaFromFolder")
 
 const config = {
     repository: 'https://github.com/NijsJonas/ServerGCKB',
-    fromReleases: true,
+    fromReleases: false,
+    branch: "main",
     tempLocation: process.env.TEMP_LOCATION,
     ignoreFiles: [],
     executeOnComplete: '',
