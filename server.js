@@ -24,7 +24,7 @@ const config = {
     repository: 'https://github.com/NijsJonas/ServerGCKB',
     fromReleases: true,
     tempLocation: process.env.TEMP_LOCATION,
-    ignoreFiles: ['util/config.js'],
+    ignoreFiles: [],
     executeOnComplete: '',
     exitOnComplete: true
 }
