@@ -62,11 +62,12 @@ function updateFolderImages(folderPath) {
 }
 
 // Main routes
-// app.use(express.static(path.join(__dirname, 'Public')));
-//
-// app.get('/TimeTable', (req, res) => {
-//     res.sendFile('TimeTable.html', { root: path.join(__dirname, 'Public') });
-// });
+app.get('/Timetable', (req, res) => {
+    const htmlPath = path.join(__dirname, 'Public', 'Timetable.html');
+    fs.readFile(htmlPath, 'utf8', (err, html) => {
+        res.send(html);
+    });
+});
 
 app.get('/', (req, res) => {
     const folder = req.query.folder;
@@ -78,8 +79,8 @@ app.get('/', (req, res) => {
         if (err) return res.status(500).send('Could not load page');
         let finalHtml = html.replace('{{FOLDER_PLACEHOLDER}}', folder);
         if(!process.env.DEVELOPMENT) {
-            finalHtml = html.replace("connectionStatus.className = 'disconnected';", "connectionStatus.className = 'hidden';");
-            finalHtml = html.replace("connectionStatus.className = 'connected';", "connectionStatus.className = 'hidden';");
+            finalHtml = finalHtml.replace("connectionStatus.className = 'disconnected';", "connectionStatus.className = 'hidden';");
+            finalHtml = finalHtml.replace("connectionStatus.className = 'connected';", "connectionStatus.className = 'hidden';");
         }
         res.send(finalHtml);
     });
