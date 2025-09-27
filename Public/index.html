@@ -167,6 +167,8 @@
         }
 
         if (mediaItem.type === 'video') {
+            imageElement1.style.display = 'none';
+            imageElement2.style.display = 'none';
             if(CurrentElement == 2) {
                 MyElement = videoElement1;
                 CurrentElement = 1;
@@ -199,6 +201,8 @@
             MyElement.src = mediaItem.path;
             MyElement.load();
         } else {
+            videoElement1.style.display = 'none';
+            videoElement2.style.display = 'none';
             if(CurrentElement === 2) {
                 MyElement = imageElement1;
                 CurrentElement = 1;
