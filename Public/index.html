@@ -72,7 +72,10 @@
     <div id="loadingMessage">Loading media...</div>
     <img id="mainImage1" style="display: none;" alt="Fullscreen Image" src="">
     <img id="mainImage2" style="display: none;" alt="Fullscreen Image" src="">
-    <video id="mainVideo" style="display: none;" muted autoplay loop>
+    <video id="mainVideo1" style="display: none;" muted autoplay loop>
+        Your browser does not support the video tag.
+    </video>
+    <video id="mainVideo2" style="display: none;" muted autoplay loop>
         Your browser does not support the video tag.
     </video>
 </div>
@@ -90,7 +93,8 @@
 
     const imageElement1 = document.getElementById('mainImage1');
     const imageElement2 = document.getElementById('mainImage2');
-    const videoElement = document.getElementById('mainVideo');
+    const videoElement1 = document.getElementById('mainVideo1');
+    const videoElement2 = document.getElementById('mainVideo2');
     const loadingMessage = document.getElementById('loadingMessage');
     const connectionStatus = document.getElementById('connectionStatus');
 
@@ -151,16 +155,7 @@
 
     function showMedia(mediaItem) {
         if (!mediaItem) return;
-        videoElement.style.display = 'none';
         let MyElement = imageElement2;
-        if(CurrentElement == 2) {
-            MyElement = imageElement1;
-            CurrentElement = 1;
-        }
-        else {
-            CurrentElement = 2;
-        }
-
         // Clear any existing timeouts/intervals
         if (videoTimeout) {
             clearTimeout(videoTimeout);
@@ -172,28 +167,45 @@
         }
 
         if (mediaItem.type === 'video') {
-            videoElement.onloadeddata = () => {
+            if(CurrentElement == 2) {
+                MyElement = videoElement1;
+                CurrentElement = 1;
+            }
+            else {
+                MyElement = videoElement2;
+                CurrentElement = 2;
+            }
+            MyElement.onloadeddata = () => {
                 loadingMessage.style.display = 'none';
-                videoElement.style.display = 'block';
+                videoElement1.style.display = 'none';
+                videoElement2.style.display = 'none';
                 lastLoadedMedia = mediaItem;
+                MyElement.style.display = 'block';
 
                 // Set timeout for video duration + 1 second buffer, but only if there are multiple items
                 if (media.length > 1) {
-                    const duration = videoElement.duration * 1000 + 1000; // Convert to ms and add buffer
+                    const duration = MyElement.duration * 1000 + 1000; // Convert to ms and add buffer
                     videoTimeout = setTimeout(() => {
                         nextMedia();
                     }, duration);
                 }
             };
 
-            videoElement.onerror = () => {
+            MyElement.onerror = () => {
                 console.error('Failed to load video:', mediaItem.path);
                 nextMedia();
             };
 
-            videoElement.src = mediaItem.path;
-            videoElement.load();
+            MyElement.src = mediaItem.path;
+            MyElement.load();
         } else {
+            if(CurrentElement === 2) {
+                MyElement = imageElement1;
+                CurrentElement = 1;
+            }
+            else {
+                CurrentElement = 2;
+            }
             MyElement.onload = () => {
                 imageElement1.style.display = 'none';
                 imageElement2.style.display = 'none';
