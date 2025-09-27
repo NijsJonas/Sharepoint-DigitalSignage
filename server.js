@@ -76,7 +76,7 @@ function updateFolderImages(folderPath) {
 
 // Main routes
 app.get('/Timetable', (req, res) => {
-    const htmlPath = path.join(__dirname, 'Public', 'Timetable.html');
+    const htmlPath = path.join(__dirname, 'Public', 'TimeTable.html');
     fs.readFile(htmlPath, 'utf8', (err, html) => {
         res.send(html);
     });
