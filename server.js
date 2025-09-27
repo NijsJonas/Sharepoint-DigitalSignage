@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const chokidar = require('chokidar');
 const dotenv = require('dotenv');
+const AutoGitUpdate = require('auto-git-update');
 dotenv.config();
 
 const app = express();
@@ -18,6 +19,18 @@ const folderWatchers = new Map();
 const folderImages = new Map();
 
 const getMediaFromFolder = require("./Functions/getMediaFromFolder")
+
+const config = {
+    repository: 'https://github.com/NijsJonas/ServerGCKB',
+    fromReleases: false,
+    branch: "main",
+    tempLocation: process.env.TEMP_LOCATION,
+    ignoreFiles: [],
+    executeOnComplete: '',
+    exitOnComplete: true
+}
+
+const updater = new AutoGitUpdate(config);
 
 // Serve static files (images)
 app.use('/images', express.static(process.env.FOLDER_LOCATION));
@@ -116,6 +129,19 @@ process.on('SIGINT', () => {
     });
     process.exit(0);
 });
+
+async function upgradeOnly() {
+    try {
+        const CompareVersions = await updater.compareVersions(); // true only if remote > local
+        if(CompareVersions.currentVersion < CompareVersions.remoteVersion) {
+            await updater.autoUpdate();
+        }
+    } catch (err) {
+        console.error('Updater error:', err);
+    }
+}
+
+upgradeOnly();
 
 server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
