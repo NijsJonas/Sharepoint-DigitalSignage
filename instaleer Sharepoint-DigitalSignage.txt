@@ -1,0 +1,65 @@
+git clone https://github.com/NijsJonas/Sharepoint-DigitalSignage.git
+sudo apt-get install nodejs
+sudo apt-get install npm
+
+cd Sharepoint-DigitalSignage
+sudo npm i
+
+sudo rm -rf /var/lib/dpkg/lock-frontend
+sudo rm -rf /var/lib/dpkg/lock
+sudo apt-get update
+sudo apt-get upgrade -y
+sudo apt-get dist-upgrade -y
+sudo apt-get autoremove -y
+sudo apt-get autoclean -y
+
+wget -qO - https://download.opensuse.org/repositories/home:/npreining:/debian-ubuntu-onedrive/xUbuntu_25.04/Release.key | gpg --dearmor | sudo tee /usr/share/keyrings/obs-onedrive.gpg > /dev/null
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/obs-onedrive.gpg] https://download.opensuse.org/repositories/home:/npreining:/debian-ubuntu-onedrive/xUbuntu_25.04/ ./" | sudo tee /etc/apt/sources.list.d/onedrive.list
+
+sudo apt install --no-install-recommends --no-install-suggests onedrive
+
+onedrive --get-sharepoint-drive-id 'TEST'
+
+mkdir ~/.config/SharePoint_TEST
+mkdir ~/SharePoint_TEST
+
+wget https://raw.githubusercontent.com/abraunegg/onedrive/master/config -O ~/.config/SharePoint_TEST/config
+
+config bestand aanpassen:sync_dir = "~/SharePoint_TEST"
+drive_id = "insert the drive_id value from above here"
+
+sudo reboot
+
+onedrive --confdir="~/.config/SharePoint_TEST" --synchronize --verbose
+onedrive --confdir="~/.config/SharePoint_TEST" --synchronize --verbose --dry-run
+
+sudo cp /lib/systemd/system/onedrive@.service /lib/systemd/system/onedrive-SharePoint_TEST@.service
+
+sudo nano /lib/systemd/system/onedrive-SharePoint_TEST@.service
+ExecStart lijn aapassen: --confdir="/home/gckb/.config/SharePoint_TEST"
+
+sudo systemctl enable --now onedrive-SharePoint_TEST@gckb.service
+sudo systemctl start onedrive-SharePoint_TEST@gckb.service
+
+OPTIONAL: checken: systemctl status onedrive-SharePoint_TEST@gckb.service
+
+sudo loginctl enable-linger gckb
+
+https://github.com/abraunegg/onedrive/blob/master/docs/sharepoint-libraries.md
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---- APACHE SERVER ----
+sudo apt install apache2
