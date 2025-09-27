@@ -132,12 +132,9 @@ process.on('SIGINT', () => {
 
 async function upgradeOnly() {
     try {
-        const isRemoteNewer = await updater.compareVersions(); // true only if remote > local
-        if (isRemoteNewer) {
-            console.log('Updater: remote is newer; upgrading...');
+        const CompareVersions = await updater.compareVersions(); // true only if remote > local
+        if(CompareVersions.currentVersion < CompareVersions.remoteVersion) {
             await updater.autoUpdate();
-        } else {
-            console.log('Updater: no upgrade (remote is same or older).');
         }
     } catch (err) {
         console.error('Updater error:', err);
