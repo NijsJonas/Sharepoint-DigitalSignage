@@ -70,7 +70,8 @@
 <div id="connectionStatus" class="connected">Connected</div>
 <div id="imageContainer">
     <div id="loadingMessage">Loading media...</div>
-    <img id="mainImage" style="display: none;" alt="Fullscreen Image" src="">
+    <img id="mainImage1" style="display: none;" alt="Fullscreen Image" src="">
+    <img id="mainImage2" style="display: none;" alt="Fullscreen Image" src="">
     <video id="mainVideo" style="display: none;" muted autoplay loop>
         Your browser does not support the video tag.
     </video>
@@ -85,8 +86,10 @@
     let slideInterval;
     let lastLoadedMedia = null;
     let videoTimeout;
+    let CurrentElement = 2;
 
-    const imageElement = document.getElementById('mainImage');
+    const imageElement1 = document.getElementById('mainImage1');
+    const imageElement2 = document.getElementById('mainImage2');
     const videoElement = document.getElementById('mainVideo');
     const loadingMessage = document.getElementById('loadingMessage');
     const connectionStatus = document.getElementById('connectionStatus');
@@ -148,10 +151,15 @@
 
     function showMedia(mediaItem) {
         if (!mediaItem) return;
-
-        // Hide both elements first
-        imageElement.style.display = 'none';
         videoElement.style.display = 'none';
+        let MyElement = imageElement2;
+        if(CurrentElement == 2) {
+            MyElement = imageElement1;
+            CurrentElement = 1;
+        }
+        else {
+            CurrentElement = 2;
+        }
 
         // Clear any existing timeouts/intervals
         if (videoTimeout) {
@@ -186,21 +194,23 @@
             videoElement.src = mediaItem.path;
             videoElement.load();
         } else {
-            imageElement.onload = () => {
+            MyElement.onload = () => {
+                imageElement1.style.display = 'none';
+                imageElement2.style.display = 'none';
                 loadingMessage.style.display = 'none';
-                imageElement.style.display = 'block';
+                MyElement.style.display = 'block';
                 lastLoadedMedia = mediaItem;
 
                 // Schedule next media for images
                 scheduleNextMedia();
             };
 
-            imageElement.onerror = () => {
+            MyElement.onerror = () => {
                 console.error('Failed to load image:', mediaItem.path);
                 nextMedia();
             };
 
-            imageElement.src = mediaItem.path;
+            MyElement.src = mediaItem.path;
         }
     }
 
@@ -220,7 +230,8 @@
         if (media.length === 0) {
             loadingMessage.textContent = 'No images found in folder';
             loadingMessage.style.display = 'block';
-            imageElement.style.display = 'none';
+            imageElement1.style.display = 'none';
+            imageElement2.style.display = 'none';
             return;
         }
 
