@@ -45,7 +45,9 @@ function fetchTimetable() {
         res.setEncoding('utf8');
         res.on('data', chunk => raw += chunk);
         res.on('end', () => {
-            timetableCache = { html: raw, fetchedAt: new Date() };
+            const base = '<base href="https://gymcenterkleinbrabantcvba.sporthal.net/">';
+            const html = raw.includes('<head>') ? raw.replace('<head>', `<head>${base}`) : base + raw;
+            timetableCache = { html, fetchedAt: new Date() };
             console.log(`[Timetable] Cache refreshed at ${timetableCache.fetchedAt.toISOString()}`);
         });
     }).on('error', err => console.error('[Timetable] Fetch error:', err.message));
