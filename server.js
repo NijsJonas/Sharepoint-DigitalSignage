@@ -6,7 +6,10 @@ const path = require('path');
 const chokidar = require('chokidar');
 const dotenv = require('dotenv');
 const AutoGitUpdate = require('auto-git-update');
+const https = require('https');
 dotenv.config();
+const TIMETABLE_URL = 'https://gymcenterkleinbrabantcvba.sporthal.net/bookingsexport/narrowcasting?location=365d5097-0a0b-5eab-ac4b-a161f7038b10&level=ADMIN';
+let timetableCache = { html: '<p>Loading cache…</p>', fetchedAt: null };
 
 const app = express();
 const server = http.createServer(app);
@@ -35,6 +38,21 @@ const updater = new AutoGitUpdate(config);
 // Serve static files (images)
 app.use('/images', express.static(process.env.FOLDER_LOCATION));
 console.log(`Serving images from ${process.env.FOLDER_LOCATION}`);
+// Cache Timetable
+function fetchTimetable() {
+    https.get(TIMETABLE_URL, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
+        let raw = '';
+        res.setEncoding('utf8');
+        res.on('data', chunk => raw += chunk);
+        res.on('end', () => {
+            timetableCache = { html: raw, fetchedAt: new Date() };
+            console.log(`[Timetable] Cache refreshed at ${timetableCache.fetchedAt.toISOString()}`);
+        });
+    }).on('error', err => console.error('[Timetable] Fetch error:', err.message));
+}
+
+fetchTimetable();
+setInterval(fetchTimetable, 60_000);
 // Function to setup folder watcher
 function setupFolderWatcher(folderPath) {
     if (folderWatchers.has(folderPath)) {
@@ -80,6 +98,10 @@ app.get('/Timetable', (req, res) => {
     fs.readFile(htmlPath, 'utf8', (err, html) => {
         res.send(html);
     });
+});
+app.get('/timetable-proxy', (req, res) => {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.send(timetableCache.html);
 });
 
 app.get('/', (req, res) => {
